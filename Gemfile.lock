@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    stemmify (0.0.2)
+    tokenizer (0.1.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  stemmify (~> 0.0.2)
+  tokenizer (~> 0.1.2)
+
+BUNDLED WITH
+   1.10.6
