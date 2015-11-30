@@ -1,9 +1,7 @@
 require 'stemmify'
 require 'matrix'
-require 'colorize'
-require 'pry'
 
-class Program
+class SearchEngine
 
   def initialize keywords, documents
     @terms = parse_keywords keywords
@@ -11,20 +9,13 @@ class Program
     set_idf
   end
 
-
-  def run
-    loop do
-      print 'Query: '.blue
-      query = gets.chomp
-      query_tf_idf = tf_idf(tf(bag_of_words(word_count(query))))
-      update_sim_td_idf_for query_tf_idf
-      @documents.
-        select {|doc| doc[:sim_tf_idf] > 0}.
-        sort {|doc1, doc2| doc2[:sim_tf_idf] <=> doc1[:sim_tf_idf]}.
-        each {|doc| puts "#{doc[:content][/[^\r\n]+/]}; #{doc[:sim_tf_idf].to_f}"}
-    end
+  def search query
+    query_tf_idf = tf_idf(tf(bag_of_words(word_count(query || ''))))
+    update_sim_td_idf_for query_tf_idf
+    @documents.
+      select {|doc| doc[:sim_tf_idf] > 0}.
+      sort {|doc1, doc2| doc2[:sim_tf_idf] <=> doc1[:sim_tf_idf]}
   end
-
 
   def word_count string
     string.
@@ -77,5 +68,3 @@ private
     @documents.each {|doc| doc[:sim_tf_idf] = sim_tf_idf(doc[:tf_idf], tf_idf)}
   end
 end
-
-Program.new(File.read('keywords.txt'), File.read('documents.txt')).run
